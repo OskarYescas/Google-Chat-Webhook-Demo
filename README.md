@@ -13,7 +13,6 @@ It includes the complete enterprise architectural roadmap and administrative con
 
 ```text
 ├── Code.gs             # Apps Script sample illustrating simple text & rich Cards V2 notifications
-├── appsscript.json     # Apps Script project configuration manifest & V8 engine declaration
 └── README.md           # Architectural configuration walkthrough & replication instructions
 ```
 
@@ -27,19 +26,13 @@ To deploy and test incoming webhooks successfully across your Google Workspace d
 1. Navigate to **[admin.google.com](https://admin.google.com)** -> **Apps > Google Workspace > Google Chat > Chat apps**.
 2. Select your targeted **Configuration Group** (or Organizational Unit) in the left panel.
 3. Verify the following toggles are active:
-   * **Allow users to install Chat apps:** `ON` *(Mandatory for allowing incoming proxy bots inside spaces).*
-   * **Allow users to add and use incoming webhooks:** `ON`.
-   * **App Installation Restrictions:** Ensure your setting is **NOT** set exclusively to *"Allow users to install and run only allowed apps from the Marketplace"*. If restricted purely to published Marketplace catalog items, incoming space webhooks cannot pass initial runtime authorization checks.
+
+* **Allow users to add and use incoming webhooks:** `ON`.
 
 ### B. Drive & Docs Network Allowlists (`Apps > Google Workspace > Drive and Docs`)
 1. Navigate to **Apps > Google Workspace > Settings for Drive and Docs > Features and Applications**.
 2. Locate **`Importing and fetching from URLs`** *(Select which URLs users can fetch data from or send data to within Sheets and Scripts)*.
 3. Confirm this is set to **Allow importing and fetching from all URLs**, or if utilizing restricted mode (`Allow importing and fetching only from the following URLs`), verify that `https://chat.googleapis.com/` is explicitly listed.
-
-### C. Security & API Access Controls (`Security > Access and data control > API controls`)
-1. Navigate to **Security > Access and data control > API controls > App Access Control > Google services**.
-2. Ensure **`Apps Script Runtime`** and **`Google Chat`** are configured as **`Unrestricted`**.
-3. Confirm under **Google Workspace Marketplace > Settings** that internal app distribution and execution (`Manage users' installations`) allows internal domain scripting.
 
 ---
 
@@ -47,16 +40,15 @@ To deploy and test incoming webhooks successfully across your Google Workspace d
 
 ```
 +-----------------------------------------------------------------------------+
-|                         GOOGLE WORKSPACE TENANT                              |
+|                         GOOGLE WORKSPACE TENANT                             |
 |                                                                             |
-|  [1. Chat Apps Settings] --------> ON (Permits Webhook Bot proxy inside room)|
-|  [2. Drive & Docs URL Policy] ---> Allowed (Enables UrlFetchApp targeting Chat)|
-|  [3. Security API Controls] -----> Apps Script Runtime: Unrestricted        |
+|  [1. Chat Apps Settings] --------> ON (Permits Webhook Bot  inside room).   |
+|  [2. Drive & Docs URL Policy] ---> Allowed ( UrlFetchApp targeting Chat).   |
 +-----------------------------------------------------------------------------+
                                        |
                                        v
 +-----------------------------------------------------------------------------+
-|                         GOOGLE APPS SCRIPT (Code.gs)                         |
+|                         GOOGLE APPS SCRIPT (Code.gs)                        |
 |                                                                             |
 |  postToWebhook(payload) --> UrlFetchApp.fetch(WEBHOOK_URL, { method: POST })|
 +-----------------------------------------------------------------------------+
